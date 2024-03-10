@@ -1,0 +1,15 @@
+{
+  "name": "projetosdiversos",
+  "version": "1.0.0",
+  "description": "Kit de ferramentas para utilizar no dia a dia",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.4.2"
+  }
+}

@@ -1,0 +1,18 @@
+# Arquivos e pastas gerados pelo Node.js
+node_modules/
+
+# Arquivo do Webstorm
+.idea
+
+# Pasta de saida de Arquivos
+saidaArquivo/
+
+# Arquivos de compilação TypeScript
+*.js
+*.js.map
+
+# Arquivos de compilação HTML
+*.html
+
+# Arquivos gerados pelo PDFKit (PDFs)
+*.pdf
