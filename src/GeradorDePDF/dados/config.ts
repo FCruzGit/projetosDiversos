@@ -1,5 +1,10 @@
 export const pdfConfig = {
-    title: "Sample PDF",
-    author: "Your Name",
-    content: "This is a sample PDF generated using TypeScript and pdfkit."
+    title: "CHAMADO DE SUPORTE N° ",
+    author: "Felippe Cruz",
+    tipo:   "FIDC",
+    fundo:  "FLINT",
+};
+
+export const chamado = {
+    numero: 1,
 };

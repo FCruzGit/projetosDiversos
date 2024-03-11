@@ -8,6 +8,8 @@ node_modules/
 saidaArquivo/
 
 # Arquivos de compilação TypeScript
+dist
+
 *.js
 *.js.map
 

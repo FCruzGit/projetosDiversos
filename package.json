@@ -4,12 +4,20 @@
   "description": "Kit de ferramentas para utilizar no dia a dia",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/html-pdf": "^3.0.3",
+    "@types/pdfkit": "^0.13.4",
     "typescript": "^5.4.2"
+  },
+  "dependencies": {
+    "html-pdf": "^3.0.1",
+    "pdf-lib": "^1.17.1",
+    "pdfkit": "^0.14.0"
   }
 }
