@@ -1,28 +1,34 @@
-import fs from 'fs';
-import path from 'path';
-import {chamado, pdfConfig} from '../dados/config';
-import { templateHTML } from "../template/template";
+import {outputDir, verificarDiretorioSaida} from '../utils/verificarDiretorioSaida';
+import {CustomCreateOptions, templateHTML} from '../template/template';
+import {data} from '../utils/calcularData';
+import {chamado, pdfConfig} from '../utils/config';
 import pdf from 'html-pdf';
+import path from 'path';
 
-function gerarPDF(config: { title: string; author: string; content: string }) {
-    const outputDir = '../../../src/GeradorDePDF/saidaArquivo';
-    const filePath = path.join(__dirname, outputDir, `${config.title}${chamado.numero} ${config.author}.pdf`);
+async function gerarPDF(config: { title: string; author: string; content: string }) {
 
-    // Criar o diretório de saída, se não existir
-    if (!fs.existsSync(path.join(__dirname, outputDir))) {
-        fs.mkdirSync(path.join(__dirname, outputDir), { recursive: true });
-    }
+    await verificarDiretorioSaida();
 
-    // Gerar PDF a partir do conteúdo HTML
-    pdf.create(config.content).toFile(filePath, (err) => {
+    // Formatar PDF como A5
+    const options: CustomCreateOptions = { format: 'A5' as const };
+
+    // Calcula os valores de Data
+    let templateComData = config.content.replace(/\${data.dia}/g, data.dia.toString());
+    templateComData = templateComData.replace(/\${data.mes}/g, data.mes);
+    templateComData = templateComData.replace(/\${data.hora}/g, data.hora);
+
+    //Define o Nome do Arquivo
+    const nomeArquivo = path.join(outputDir, `${config.title}${chamado.numero} ${config.author.toUpperCase()}.pdf`);
+
+    // Transformar HTML em PDF
+    pdf.create(config.content, options).toFile(nomeArquivo, (err) => {
         if (err) {
             console.error('Erro ao gerar PDF:', err);
             return;
         }
-        // Log de conclusão
-        console.log(`\n \n PDF "${config.title}${chamado.numero}" gerado com sucesso em ${filePath} \n`);
+        // mensagem de conclusão no terminal
+        console.log(`\n \n PDF gerado com sucesso em ${nomeArquivo} \n`);
     });
 }
 
-// Gerar PDF automaticamente com o conteúdo do template HTML fornecido
 gerarPDF({ title: pdfConfig.title, author: pdfConfig.author, content: templateHTML });

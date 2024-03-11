@@ -2,13 +2,13 @@
 node_modules/
 
 # Arquivo do Webstorm
-.idea
+.idea/
 
 # Pasta de saida de Arquivos
 saidaArquivo/
 
 # Arquivos de compilação TypeScript
-dist
+dist/
 
 *.js
 *.js.map
