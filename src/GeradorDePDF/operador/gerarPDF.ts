@@ -1,7 +1,7 @@
 import {outputDir, verificarDiretorioSaida} from '../utils/verificarDiretorioSaida';
 import {CustomCreateOptions, templateHTML} from '../template/template';
 import {processarTemplate} from '../utils/calcularData';
-import {chamado, pdfConfig} from '../utils/config';
+import {pdfConfig} from '../utils/config';
 import pdf from 'html-pdf';
 import path from 'path';
 
@@ -16,7 +16,7 @@ async function gerarPDF(config: { title: string; author: string; content: string
     const dataAtualHTML = processarTemplate(config.content);
 
     //Define o Nome do Arquivo
-    const nomeArquivo = path.join(outputDir, `${config.title}${chamado.numero} ${config.author.toUpperCase()}.pdf`);
+    const nomeArquivo = path.join(outputDir, `${config.title}${pdfConfig.chamadoNumero} ${config.author.toUpperCase()}.pdf`);
 
     // Transformar HTML em PDF
     pdf.create(config.content, options).toFile(nomeArquivo, (err) => {

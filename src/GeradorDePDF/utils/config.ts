@@ -1,11 +1,8 @@
 export const pdfConfig = {
-    title: "CHAMADO DE SUPORTE N° ",
+    title: "CHAMADO DE N° ",
     author: "FELIPPE CRUZ",
-    fundoTipo: "FIDC",
-    fundoNome: "FLINT",
-};
-
-export const chamado = {
-    numero: 1,
-    tipo: "Limpeza de Base"
+    fundoTipo: "fidc",
+    fundoNome: "openco II",
+    chamadoNumero: 7,
+    descricao: "Limpeza de Base"
 };
