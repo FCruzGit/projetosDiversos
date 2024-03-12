@@ -5,12 +5,21 @@ import {pdfConfig} from '../utils/config';
 import pdf from 'html-pdf';
 import path from 'path';
 
-async function gerarPDF(config: { title: string; author: string; content: string }) {
+/**
+ *  Executar o código gerarPDF.ts para gerar o Arquivo PDF
+ *
+ *  No arquivo config.ts estão os dados a preencher do HTML
+ */
+async function gerarPDF(config: { title: string; author: string; content: string; }) {
 
+    // Verifica se o diretório de saida existe, se não, cria o mesmo.
     await verificarDiretorioSaida();
 
-    // Formatar PDF como A5
-    const options: CustomCreateOptions = { format: 'A5' as const };
+    // Escolher Orientação e Formato do PDF
+    const options: CustomCreateOptions = {
+        format: 'A5',
+        orientation: 'landscape'
+    };
 
     // Calcula os valores de Data
     const dataAtualHTML = processarTemplate(config.content);
@@ -24,8 +33,9 @@ async function gerarPDF(config: { title: string; author: string; content: string
             console.error('Erro ao gerar PDF:', err);
             return;
         }
-        // mensagem de conclusão no terminal
-        console.log(`\n \n PDF gerado com sucesso em ${nomeArquivo} \n`);
+        else {
+            console.log(`\n \n PDF gerado com sucesso em ${nomeArquivo} \n`);
+        }
     });
 }
 

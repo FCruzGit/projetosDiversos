@@ -2,8 +2,12 @@ import {CreateOptions} from 'pdf-lib';
 import {pdfConfig} from '../utils/config';
 import {data} from '../utils/calcularData';
 
+export type PaperFormat = "A3" | "A4" | "A5" | "Legal" | "Letter" | "Tabloid";
+export type Orientation = "portrait" | "landscape";
+
 export interface CustomCreateOptions extends CreateOptions {
-    format?: "A3" | "A4" | "A5" | "Legal" | "Letter" | "Tabloid" | undefined;
+    format: PaperFormat
+    orientation: Orientation
 }
 
 export const templateHTML = `
