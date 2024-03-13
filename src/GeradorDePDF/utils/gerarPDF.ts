@@ -1,5 +1,5 @@
 import pdf from 'html-pdf';
-import {CustomCreateOptions} from './config';
+import {CustomCreateOptions} from '../config';
 
 export function gerarPDF(configContent:string, nomeArquivoPDF: string, options: CustomCreateOptions) {
     pdf.create(configContent, options).toFile(nomeArquivoPDF, (err) => {

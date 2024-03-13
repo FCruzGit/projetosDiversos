@@ -1,6 +1,6 @@
 import path from 'path';
 import {diretorioSaida} from './verificarDiretorioSaida';
-import {nomeArquivoPDF, pdfConfig} from './config';
+import {nomeArquivoPDF, pdfConfig} from '../config';
 
 export function gerarNomePDF() {
     if(nomeArquivoPDF.nomeDinamico){
