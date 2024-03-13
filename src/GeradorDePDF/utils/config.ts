@@ -18,6 +18,13 @@ export const pdfConfig = {
     descricao: "descrição do chamado"
 };
 
+// Nome do arquivo será dinamico?
+export const nomeArquivoPDF = {
+    nomeDinamico: true,
+    nomeArquivo: "CHAMADO_FIDC"
+}
+
+
 // Escolher Orientação e Formato do PDF
 export const options: CustomCreateOptions = {
     format: 'A5',

@@ -1,8 +1,8 @@
-import {diretorioSaida, verificarDiretorioSaida} from '../utils/verificarDiretorioSaida';
-import {options, pdfConfig} from '../utils/config';
-import path from 'path';
+import {verificarDiretorioSaida} from '../utils/verificarDiretorioSaida';
+import {options} from '../utils/config';
 import {gerarHTML} from '../template/gerarHTML';
 import {gerarPDF} from '../utils/gerarPDF';
+import {gerarNomePDF} from '../utils/gerarNomeArquivo';
 
 /**
  *  Executar o código gerarArquivoChamado.ts para gerar o Arquivo PDF
@@ -11,16 +11,16 @@ import {gerarPDF} from '../utils/gerarPDF';
  */
 ( async function gerarArquivoChamado () {
 
-    // Verifica se o diretório de saida existe
+    // Verificar diretório de saida
     await verificarDiretorioSaida();
 
-    // Define o Nome do Arquivo de acordo com o projeto
-    const nomeArquivo = path.join(diretorioSaida, `${pdfConfig.title}${pdfConfig.chamadoNumero} ${pdfConfig.author.toUpperCase()}.pdf`);
+    // Definir o Nome do Arquivo
+    const nomePDF = gerarNomePDF()
 
     // Preparar o arquivo HTML
     const contentHTML = gerarHTML();
 
     // Gerar o PDF final
-    await gerarPDF( contentHTML, nomeArquivo, options );
+    gerarPDF( contentHTML, nomePDF, options );
 
 })();
