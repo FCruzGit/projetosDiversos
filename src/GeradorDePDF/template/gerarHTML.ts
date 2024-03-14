@@ -1,15 +1,15 @@
-import { pdfConfig } from '../utils/config';
+import { pdfConfig } from '../config';
+import moment from 'moment';
+
 
 export function gerarHTML(): string {
 
-    const agora = new Date();
-
-    const mesPorExtenso = [ 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro' ];
+    const agora = moment().locale('pt-br');
 
     const data = {
-        dia: agora.getDate(),
-        mes: mesPorExtenso[agora.getMonth()],
-        hora: `${String(agora.getHours()).padStart(2, '0')}:${String(agora.getMinutes()).padStart(2, '0')}`
+        dia: agora.date(),
+        mes: agora.format('MMMM'),
+        hora: agora.format('HH:mm')
     };
 
     return `
@@ -104,7 +104,7 @@ export function gerarHTML(): string {
                         <tr>
                             <td>${data.hora}</td>
                             <td>${data.dia}</td>
-                            <td>${data.mes}</td>
+                            <td>${data.mes.toUpperCase()}</td>
                             <td>${pdfConfig.descricao}</td>
                         </tr>
                     </tbody>
@@ -113,7 +113,6 @@ export function gerarHTML(): string {
         </div>
     
     </body>
-    
     </html>
     `;
 }

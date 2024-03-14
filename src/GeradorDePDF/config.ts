@@ -10,7 +10,7 @@ export interface CustomCreateOptions extends CreateOptions {
 
 // Inserir dados do Chamado
 export const pdfConfig = {
-    title: "TITULO DO CHAMADO",
+    title: "titulo do chamado",
     author: "autor",
     fundoTipo: "fundo tipo",
     fundoNome: "fundo nome",
@@ -23,7 +23,6 @@ export const nomeArquivoPDF = {
     nomeDinamico: true,
     nomeArquivo: "CHAMADO_FIDC"
 }
-
 
 // Escolher Orientação e Formato do PDF
 export const options: CustomCreateOptions = {

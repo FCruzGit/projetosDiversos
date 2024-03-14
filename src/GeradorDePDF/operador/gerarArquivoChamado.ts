@@ -1,5 +1,5 @@
 import {verificarDiretorioSaida} from '../utils/verificarDiretorioSaida';
-import {options} from '../utils/config';
+import {options} from '../config';
 import {gerarHTML} from '../template/gerarHTML';
 import {gerarPDF} from '../utils/gerarPDF';
 import {gerarNomePDF} from '../utils/gerarNomeArquivo';

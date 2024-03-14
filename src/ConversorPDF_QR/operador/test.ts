@@ -1,1 +1,0 @@
-const flinston = 1
