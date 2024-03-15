@@ -1,10 +1,11 @@
 import fs from 'fs';
 import path from 'path';
+import {diretorioSaida} from '../config';
 
-export const diretorioSaida = path.join(__dirname, '../../../src/GeradorDePDF/saidaArquivo');
+export const diretorio = path.join(__dirname, diretorioSaida.dirSaida);
 
 export async function verificarDiretorioSaida() {
-    if (!fs.existsSync(diretorioSaida)) {
-        await fs.promises.mkdir(diretorioSaida, { recursive: true });
+    if (!fs.existsSync(diretorio)) {
+        await fs.promises.mkdir(diretorio, { recursive: true });
     }
 }

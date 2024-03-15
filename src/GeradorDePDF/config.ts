@@ -1,12 +1,13 @@
 import {CreateOptions} from 'pdf-lib';
 
-export type PaperFormat = "A3" | "A4" | "A5" | "Legal" | "Letter" | "Tabloid";
-export type Orientation = "portrait" | "landscape";
-
 export interface CustomCreateOptions extends CreateOptions {
     format: PaperFormat
     orientation: Orientation
 }
+
+export type PaperFormat = "A3" | "A4" | "A5" | "Legal" | "Letter" | "Tabloid";
+export type Orientation = "portrait" | "landscape";
+
 
 // Inserir dados do Chamado
 export const pdfConfig = {
@@ -17,6 +18,11 @@ export const pdfConfig = {
     chamadoNumero: 1,
     descricao: "descrição do chamado"
 };
+
+// Diretorio de Saida de arquivos
+export const diretorioSaida = {
+    dirSaida: "../../../src/GeradorDePDF/saidaArquivo"
+}
 
 // Nome do arquivo será dinamico?
 export const nomeArquivoPDF = {
