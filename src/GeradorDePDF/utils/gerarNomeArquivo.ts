@@ -1,12 +1,11 @@
-import path from 'path';
-import {nomeArquivoPDF, pdfConfig} from '../config';
-import {diretorio} from './verificarDiretorioSaida';
+import path from "path";
 
-export function gerarNomePDF() {
-    if(nomeArquivoPDF.nomeDinamico){
-        return path.join(diretorio, `${pdfConfig.title}${pdfConfig.chamadoNumero} ${pdfConfig.author.toUpperCase()}.pdf`)
+export function gerarNomePDF(config: {tituloPDF:string, numeroTitulo:number, autor:string }, arquivoPDF: {gerarNome:boolean, nomeDefinido:string}, diretorio:string) {
+
+    if(arquivoPDF.gerarNome){
+        return path.join(__dirname, diretorio, `${config.tituloPDF.toUpperCase()}${config.numeroTitulo} ${config.autor.toUpperCase()}.pdf`)
     }
     else {
-        return path.join(diretorio, `${nomeArquivoPDF.nomeArquivo}_${pdfConfig.chamadoNumero}.pdf`)
+        return path.join(__dirname, diretorio, `${arquivoPDF.nomeDefinido.toUpperCase()}_${config.numeroTitulo}.pdf`)
     }
 }

@@ -1,5 +1,5 @@
 import {verificarDiretorioSaida} from '../utils/verificarDiretorioSaida';
-import {options} from '../config';
+import {dir, formatOptions, nomeArquivoPDF, pdfConfig} from '../config';
 import {gerarHTML} from '../template/gerarHTML';
 import {gerarPDF} from '../utils/gerarPDF';
 import {gerarNomePDF} from '../utils/gerarNomeArquivo';
@@ -12,15 +12,15 @@ import {gerarNomePDF} from '../utils/gerarNomeArquivo';
 ( async function gerarArquivoChamado () {
 
     // Verificar diretório de saida
-    await verificarDiretorioSaida();
+    await verificarDiretorioSaida(dir.saida);
 
     // Definir o Nome do Arquivo
-    const nomePDF = gerarNomePDF()
+    const nomePDF = gerarNomePDF(pdfConfig, nomeArquivoPDF, dir.saida)
 
     // Preparar o arquivo HTML
-    const contentHTML = gerarHTML();
+    const contentHTML = gerarHTML(pdfConfig);
 
     // Gerar o PDF final
-    gerarPDF( contentHTML, nomePDF, options );
+    gerarPDF(contentHTML, nomePDF, formatOptions);
 
 })();
