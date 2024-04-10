@@ -10,7 +10,7 @@ export async function gerarImagemQr(caminho: string, instrucoesQrCode: qrInstruc
     const tela = createCanvas(100,100);
 
     QRCode.toCanvas(tela, instrucoesQrCode.url, qrConfig);
-s
+
     const buffer = tela.toBuffer('image/png', qrInstruction.PngConfig);
     fs.writeFileSync(path.join(__dirname, caminho, 'qr_code.png'), buffer);
 
