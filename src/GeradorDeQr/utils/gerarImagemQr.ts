@@ -2,17 +2,22 @@ import {createCanvas} from 'canvas';
 import fs from 'fs';
 import path from 'path';
 import QRCode, {QRCodeRenderersOptions} from 'qrcode';
-import {qrInstruction} from '../config';
+import {diretoriosProjeto, instrucoesPadrao} from '../config';
+import {consoleQRCGerado} from './logs/consoleLogs';
 
-// Renderiza uma tela de QR Code como imagem
-export async function gerarImagemQr(caminho: string, instrucoesQrCode: qrInstruction, qrConfig: QRCodeRenderersOptions){
 
-    const tela = createCanvas(100,100);
+// Renderiza uma tela de QR Code como imagem JPG
+export async function gerarImagemQr(caminho: diretoriosProjeto, configuracoesImagem: instrucoesPadrao){
 
-    QRCode.toCanvas(tela, instrucoesQrCode.url, qrConfig);
+    const tela = createCanvas(1000,1000);
 
-    const buffer = tela.toBuffer('image/png', qrInstruction.PngConfig);
-    fs.writeFileSync(path.join(__dirname, caminho, 'qr_code.png'), buffer);
+    await QRCode.toCanvas(tela, configuracoesImagem.instrucoesQRCode.url, configuracoesImagem);
+
+    const buffer = tela.toBuffer('image/png', configuracoesImagem.instrucoesQRCode.PngConfig);
+
+    fs.writeFileSync(path.join(__dirname, caminho.saidaArquivoFinal, 'qr_code.png'), buffer);
+
+    consoleQRCGerado()
 
     return tela;
 

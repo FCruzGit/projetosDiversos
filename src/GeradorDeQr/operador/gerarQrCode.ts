@@ -1,7 +1,9 @@
 import {gerarImagemQr} from '../utils/gerarImagemQr';
-import {extrairBase64DoCanvas} from '../utils/transformarImagemBase64';
+import {gerarCodigoB64} from '../utils/transformarImagemBase64';
 import {verificarDiretorioSaida} from '../utils/verificarDiretorioSaida';
-import {diretorio, qrConfig, qrInstruction} from '../config';
+import {configuracoesQRCode, definicoesProjeto} from '../config';
+import {gerarQRCAnimado} from './criarQrCodeAnimado';
+import {iniciar} from '../utils/logs/consoleLogs';
 
 /**
  * Função para Gerar QR Code
@@ -9,15 +11,20 @@ import {diretorio, qrConfig, qrInstruction} from '../config';
  * No arquivo config.ts estão os parametros ajustaveis do Arquivo
  *
  */
-(async function gerarQrCode() {
+(async function gerarQRC() {
+
+    iniciar()
 
     // Verifica se o diretório de Saida existe
-    await verificarDiretorioSaida(diretorio.saida)
+    await verificarDiretorioSaida(definicoesProjeto.diretoriosProjeto)
 
     // Cria a imagem do QR Code
-    const imagemQrCode = await gerarImagemQr(diretorio.saida, qrInstruction, qrConfig)
+    const imagemQRC = await gerarImagemQr(definicoesProjeto.diretoriosProjeto, configuracoesQRCode)
 
-    // Converte a imagem em dados base64
-    const base64Image = extrairBase64DoCanvas(imagemQrCode)
+    // Converte a imagem em base 64
+    gerarCodigoB64(imagemQRC)
+
+    // Converte a imagem em GIF
+    gerarQRCAnimado()
 
 })();

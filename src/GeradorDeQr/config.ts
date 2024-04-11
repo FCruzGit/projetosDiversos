@@ -2,50 +2,74 @@
 import {QRCodeRenderersOptions} from 'qrcode';
 import {PngConfig} from 'canvas';
 
-type tipoQr = "pdf" | "svg" | undefined
+export interface definicoesProjeto {
 
-export interface qrInstruction {
+    diretoriosProjeto: diretoriosProjeto
 
-    url: string,
+    conversaoB64: boolean,
 
-    tipoQr: tipoQr,
-
-    PngConfig: PngConfig
+    gerarGIF: boolean
 }
 
-export const qrConfig: QRCodeRenderersOptions = {
+export interface diretoriosProjeto {
 
-    margin: 1,
+    saidaArquivoB64: string,
 
-    scale: 5,
+    saidaArquivoTemp: string,
 
-    width: 250,
+    saidaArquivoFinal: string,
+}
+
+export interface instrucoesPadrao extends QRCodeRenderersOptions {
+
+    instrucoesQRCode: {
+
+        url: string,
+
+        PngConfig: PngConfig
+    }
+}
+
+export const configuracoesQRCode: instrucoesPadrao = {
+
+    margin: 0.5, // Tamanho da margem ao redor do QR Code
+
+    width: 250, // Tamanho em Pixels da Imagem
 
     errorCorrectionLevel: 'H', // Nivel de tenacidade do QrCode
 
-    maskPattern: 1, // Altera a formatação dos pixels
+    maskPattern: 7, // Altera a formatação dos pixels
 
     color: {
-        dark: "#000000"
+
+        light: "#00000000", // Cor de Fundo
+
+        dark: "#000000" // Cor dos dados
+    },
+
+    instrucoesQRCode: {
+
+        url: "www.google.com", //
+
+        PngConfig: {
+
+            compressionLevel: 0, // Compressão da Imagem
+        }
     }
 }
 
-export const qrInstruction: qrInstruction = {
+export const definicoesProjeto: definicoesProjeto = {
 
-    url: "www.google.com",
+    diretoriosProjeto: {
 
-    tipoQr: 'svg',
+        saidaArquivoTemp: '../../../src/GeradorDeQr/SaidaArquivo/temporario',
 
-    PngConfig: {
+        saidaArquivoFinal:'../../../src/GeradorDeQr/SaidaArquivo/arquivosConcluidos',
 
-        compressionLevel: 9,
+        saidaArquivoB64: "../../../src/GeradorDeQr/SaidaArquivo/arquivosB64"
+    },
 
-        backgroundIndex: 1,
+    conversaoB64: true,
 
-        resolution: 1
-    }
-};
-
-export const diretorio = {
-    saida: "../../../src/GeradorDeQr/SaidaArquivo"
+    gerarGIF: false
 }
