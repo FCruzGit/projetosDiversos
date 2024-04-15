@@ -49,7 +49,7 @@ export const configuracoesQRCode: instrucoesPadrao = {
 
     instrucoesQRCode: {
 
-        url: "www.google.com", //
+        url: "www.google.com", // Endereço do QR Code
 
         PngConfig: {
 

@@ -1,4 +1,4 @@
-const templateHTML = `
+export const templateHTML = `
 
 <!DOCTYPE html>
 <html lang="en">

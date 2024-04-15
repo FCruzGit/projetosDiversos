@@ -6,6 +6,7 @@ node_modules/
 
 # Pasta de saida de Arquivos
 saidaArquivo/
+SaidaArquivoBPM/
 
 # Arquivos de compilação TypeScript
 dist/

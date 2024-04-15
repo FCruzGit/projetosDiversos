@@ -5,6 +5,8 @@ export function gerarQRCAnimado() {
 
     if (definicoesProjeto.gerarGIF) {
 
+
+
         consoleQRCtoGIF()
     }
 
