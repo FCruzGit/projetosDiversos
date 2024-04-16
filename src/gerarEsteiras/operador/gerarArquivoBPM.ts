@@ -20,5 +20,5 @@ export async function gerarArquivoBPM(xml: string, configuracoesEsteira: configE
 
         fs.writeFileSync(path.join(__dirname, configuracoesEsteira.diretorioSaida, `${nomeArquivoFinal}.bpmn`), xml);
 
-        console.log("Arquivo BPM gerado com sucesso!\n");
+        console.log("\n" + "Arquivo BPM " + nomeArquivoFinal + ".bpmn" + " gerado com sucesso!" + "\n\n" + "Arquivo path:" + " " + __dirname + configuracoesEsteira.diretorioSaida);
 }

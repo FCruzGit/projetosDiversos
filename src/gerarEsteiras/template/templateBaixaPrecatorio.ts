@@ -51,7 +51,7 @@ export function templateBaixaPrecatorio(config: configEsteira) {
             <camunda:inputOutput>
               <camunda:outputParameter name="acronimo">${fundo.var.acronimo}</camunda:outputParameter>
               <camunda:outputParameter name="identificacaoFundo">${idFormatada}</camunda:outputParameter>
-              <camunda:outputParameter name="emails">${fundo.var.emails}</camunda:outputParameter>
+              <camunda:outputParameter name="emails">${fundo.var.email.notificarSituacao}</camunda:outputParameter>
               <camunda:outputParameter name="original">${parametrosBPM.varOriginal}</camunda:outputParameter>
               <camunda:outputParameter name="saida">${fundo.var.sftpOutput}</camunda:outputParameter>
               <camunda:outputParameter name="schema">${parametrosBPM.schemas.entrada.precatorio}</camunda:outputParameter>

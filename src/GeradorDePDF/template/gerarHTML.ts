@@ -1,6 +1,5 @@
 import moment from 'moment';
 
-
 export function gerarHTML(pdfConfig:{autor: string, fundoTipo: string, fundoNome: string, descricao: string, numeroTitulo: number, tituloPDF: string}): string {
 
     const agora = moment().locale('pt-br');

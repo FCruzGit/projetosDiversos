@@ -1,6 +1,7 @@
 import {templateBaixaPrecatorio} from '../template/templateBaixaPrecatorio';
 import {configEsteira} from '../utils/parametros';
 import {configuracaoEsteira} from '../utils/configuracao';
+import {templateCessaoPrecatorio} from "../template/templateCessaoPrecatorio";
 
 export function selecionarTemplate(config: configEsteira): any {
     const tipoEsteira = config.fundo.var.schema.input
@@ -9,10 +10,10 @@ export function selecionarTemplate(config: configEsteira): any {
         baixaPadrao: '',
         baixaPrecatorio: templateBaixaPrecatorio(configuracaoEsteira),
         cessaoPadrao: '',
-        cessaoPrecatorio: '',
+        cessaoPrecatorio: templateCessaoPrecatorio(configuracaoEsteira),
 
     };
 
-    return selecionarTemplate[tipoEsteira] || console.log("Erro ao adicionar template");
+    return selecionarTemplate[tipoEsteira] || console.log("Erro ao adicionar template / Template não existe");
 }
 

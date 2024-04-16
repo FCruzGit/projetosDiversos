@@ -1,19 +1,22 @@
-import {configEsteira, parametroBaixa, parametrosValidacao} from '../utils/parametros';
+import {configEsteira, parametroCessao, parametrosValidacao} from '../utils/parametros';
+import {configuracaoEsteira} from "../utils/configuracao";
 
-export function templateBaixaPrecatorio(config: configEsteira) {
+export function templateCessaoPrecatorio(config: configEsteira) {
 
     const fundo = config.fundo;
-    const parametrosBPM = parametroBaixa
+    const parametrosBPM = parametroCessao
     const validarBPM = parametrosValidacao
 
     const idFormatada = fundo.identificacao.toString().replace(/\D/g, '').padStart(14, '0')
 
-    const varsCNAB = `$\{S('{"fundo": {"identificacao": ${idFormatada}, "nome": "${fundo.tipo} ${fundo.nome.toUpperCase()}"}}')}`
+    const pendenciaLastro = `$\{S('{"to":"${fundo.var.email.notificarPendenciaLastro}","subject":"[ BRL TRUST ] Operação do ###fundo.acronimo### | ###identificadorCessao### Pendência de Lastro","html":"&lt;p&gt;Prezados,&lt;/p&gt; &lt;p&gt;Informamos que a operação &lt;b&gt;###identificadorCessao###&lt;/b&gt; do fundo &lt;b&gt;###fundo.acronimo###&lt;/b&gt; - &lt;b&gt;###fundo.nome###&lt;/b&gt; está aguardando o envio do lastro.&lt;/p&gt;&lt;p&gt;Atenciosamente&lt;/p&gt;"}')}`
+
+    const PagamentoComplementar = `$\{S('{"to":"${fundo.var.email.notificarPagamentoComplementar}","subject":"[ BRL TRUST ] Operação do ###fundo.acronimo### | ###identificadorCessao### Pendência de Lastro","html":"&lt;p&gt;Prezados,&lt;/p&gt; &lt;p&gt;Informamos que a operação &lt;b&gt;###identificadorCessao###&lt;/b&gt; do fundo &lt;b&gt;###fundo.acronimo###&lt;/b&gt; - &lt;b&gt;###fundo.nome###&lt;/b&gt; foi atualizada e está agora em fase de pagamento complementar.&lt;/p&gt;&lt;p&gt;Atenciosamente&lt;/p&gt;"}')}`
 
     return `
-    <?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_0admcx5" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.9.0">
-  <bpmn:process id="fidc.fuel.cessao-direito-creditorio" name="[ FIDC FUEL ] Cessão de Direitos Creditórios" isExecutable="true" camunda:versionTag="1.0.1">
+  <bpmn:process id="fidc.${fundo.var.acronimo}.cessao-direito-creditorio" name="[ ${fundo.tipo} ${(fundo.nome.replace(/[^a-zA-Z]/g, ' ')).toUpperCase()} ] Cessão de Direitos Creditórios" isExecutable="true" camunda:versionTag="1.0.1">
     <bpmn:startEvent id="fidc.cessao.de.direitos.creditorios-start">
       <bpmn:outgoing>caminho_01</bpmn:outgoing>
     </bpmn:startEvent>
@@ -71,7 +74,7 @@ export function templateBaixaPrecatorio(config: configEsteira) {
       <bpmn:incoming>caminho_24</bpmn:incoming>
       <bpmn:outgoing>caminho_25</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="caminho_01" sourceRef="fidc.cessao.de.direitos.creditorios-start" targetRef="fidc.fuel.configuracao" />
+    <bpmn:sequenceFlow id="caminho_01" sourceRef="fidc.cessao.de.direitos.creditorios-start" targetRef="fidc.${fundo.var.acronimo}.configuracao" />
     <bpmn:sequenceFlow id="caminho_03" sourceRef="fidc-precatorio-cessao-tarefa-recuperarFicha" targetRef="decisao_01" />
     <bpmn:sequenceFlow id="caminho_04" sourceRef="decisao_01" targetRef="fidc-cessao-commons-tarefa-recuperarDocumentacao" />
     <bpmn:sequenceFlow id="caminho_05" sourceRef="fidc-cessao-commons-tarefa-recuperarDocumentacao" targetRef="fidc-precatorio-cessao-tarefa-notificarClienteEmail-lastroRecuperado" />
@@ -81,33 +84,33 @@ export function templateBaixaPrecatorio(config: configEsteira) {
     <bpmn:sequenceFlow id="caminho_08" sourceRef="fidc-cessao-commons-tarefa-registrarDeliberacao" targetRef="decisao_02" />
     <bpmn:sequenceFlow id="caminho_12" sourceRef="fidc-cessao-commons-tarefa-aguardarTramiteFromtis" targetRef="decisao_03" />
     <bpmn:sequenceFlow id="caminhoCancelada_01" name="Cancelada" sourceRef="decisao_03" targetRef="fidc-cessao-commons-tarefa-atualizarCessao">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${S(resultado).prop("codigo").stringValue() != "PAGAMENTO"}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${validarBPM.status.canceladaPagamento}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="caminho_13" sourceRef="decisao_03" targetRef="fidc-cessao-commons-tarefa-notificarClienteEmail-fromtis" />
-    <bpmn:task id="fidc.fuel.configuracao" name="Configuração">
+    <bpmn:task id="fidc.${fundo.var.acronimo}.configuracao" name="Configuração">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:outputParameter name="acronimo">radix</camunda:outputParameter>
-          <camunda:outputParameter name="identificacaoFundo">37511729000132</camunda:outputParameter>
-          <camunda:outputParameter name="emails">brlflow@mg.brltrust.com.br, cessao_fidc@brltrust.com.br, gabriel.storalli@radixportfolio.com.br</camunda:outputParameter>
-          <camunda:outputParameter name="saida">fuel/cessao/outbox</camunda:outputParameter>
-          <camunda:outputParameter name="schema">https://schemas.brltrust.com.br/json/fidc/v1.2/precatorios/cessao.schema.json</camunda:outputParameter>
-          <camunda:outputParameter name="schemaRetorno">https://schemas.brltrust.com.br/json/fidc/v1.2/precatorios/cessao-retorno.schema.json</camunda:outputParameter>
-          <camunda:outputParameter name="situacaoFromtis">${S('{"PAGO_PELO_BANCO_COBRADOR": "PAGAMENTO" }')}</camunda:outputParameter>
+          <camunda:outputParameter name="acronimo">${fundo.var.acronimo}</camunda:outputParameter>
+          <camunda:outputParameter name="identificacaoFundo">${idFormatada}</camunda:outputParameter>
+          <camunda:outputParameter name="emails">${fundo.var.email.notificarSituacao}</camunda:outputParameter>
+          <camunda:outputParameter name="saida">${fundo.var.sftpOutput}</camunda:outputParameter>
+          <camunda:outputParameter name="schema">${parametrosBPM.schemas.entrada.precatorio}</camunda:outputParameter>
+          <camunda:outputParameter name="schemaRetorno">${parametrosBPM.schemas.saida.precatorio}</camunda:outputParameter>
+          <camunda:outputParameter name="situacaoFromtis">${parametrosBPM.situacaoFromtis}</camunda:outputParameter>
           <camunda:outputParameter name="taskDefinitionKey">fidc.precatorio.apreciar-operacao</camunda:outputParameter>
-          <camunda:outputParameter name="webhook">webhook/radix/cessao</camunda:outputParameter>
-          <camunda:outputParameter name="notificacaoPendenciaLastro">${S('{"to":"cessao_fidc@brltrust.com.br, ti.developers@apexgroup.com","subject":"[ BRL TRUST ] Operação do ###fundo.acronimo### | ###identificadorCessao### Pendência de Lastro","html":"&lt;p&gt;Prezados,&lt;/p&gt; &lt;p&gt;Informamos que a operação &lt;b&gt;###identificadorCessao###&lt;/b&gt; do fundo &lt;b&gt;###fundo.acronimo###&lt;/b&gt; - &lt;b&gt;###fundo.nome###&lt;/b&gt; está aguardando o envio do lastro.&lt;/p&gt;&lt;p&gt;Atenciosamente&lt;/p&gt;"}')}</camunda:outputParameter>
-          <camunda:outputParameter name="notificacaoPagamentoComplementar">${S('{"to":"cessao_fidc@brltrust.com.br, processamento.fidc@apexgroup.com, frank.moreira@apexgroup.com, paulo.moraes@apexgroup.com, levi.avelar@apexgroup.com, ti.developers@apexgroup.com","subject":"[ BRL TRUST ] Operação do ###fundo.acronimo### | ###identificadorCessao### Pendência de Lastro","html":"&lt;p&gt;Prezados,&lt;/p&gt; &lt;p&gt;Informamos que a operação &lt;b&gt;###identificadorCessao###&lt;/b&gt; do fundo &lt;b&gt;###fundo.acronimo###&lt;/b&gt; - &lt;b&gt;###fundo.nome###&lt;/b&gt; foi atualizada e está agora em fase de pagamento complementar.&lt;/p&gt;&lt;p&gt;Atenciosamente&lt;/p&gt;"}')}</camunda:outputParameter>
+          <camunda:outputParameter name="webhook">${fundo.var.webhook}</camunda:outputParameter>
+          <camunda:outputParameter name="notificacaoPendenciaLastro">${pendenciaLastro}</camunda:outputParameter>
+          <camunda:outputParameter name="notificacaoPagamentoComplementar">${PagamentoComplementar}</camunda:outputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>caminho_01</bpmn:incoming>
       <bpmn:outgoing>caminho_02</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:sequenceFlow id="caminho_02" sourceRef="fidc.fuel.configuracao" targetRef="fidc-precatorio-cessao-tarefa-recuperarFicha" />
+    <bpmn:sequenceFlow id="caminho_02" sourceRef="fidc.${fundo.var.acronimo}.configuracao" targetRef="fidc-precatorio-cessao-tarefa-recuperarFicha" />
     <bpmn:serviceTask id="fidc-cessao-commons-tarefa-notificarEmail" name="Notificar Pendência de Lastro" camunda:type="external" camunda:topic="fidc-cessao-commons-tarefa-notificarEmail" camunda:taskPriority="5">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="email">${notificacaoPendenciaLastro}</camunda:inputParameter>
+          <camunda:inputParameter name="email">${parametrosBPM.notificacaoPendenciaLastro}</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>caminhoPendenciaLastro_01</bpmn:incoming>
@@ -169,15 +172,15 @@ export function templateBaixaPrecatorio(config: configEsteira) {
       <bpmn:sequenceFlow id="caminhoPagamento_07" sourceRef="fidc-cessao-commons-tarefa-solicitarPagamentoComplementar" targetRef="fidc-cessao-commons-tarefa-verificarPagamentoComplementar" />
       <bpmn:sequenceFlow id="caminhoPagamento_10" sourceRef="fidc-cessao-commons-tarefa-enviarComprovanteTransferencia-complementar" targetRef="fidc.cessao.pagamento-end.complementar" />
       <bpmn:sequenceFlow id="caminhoPagamentoInconsistente_07" name="Concluída" sourceRef="decisaoPagamento_04" targetRef="fidc-cessao-commons-tarefa-aprovarGestaoTed-complementar">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${S(resultado).prop("codigo").stringValue() == "CONCLUIDA"}</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${validarBPM.status.concuida}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_1xjrqm4" name="Cancelada" sourceRef="decisaoPagamento_04" targetRef="fidc.cessao.pagamento-end.complementar">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${S(resultado).prop("codigo").stringValue() == "CANCELADA"}</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${validarBPM.status.cancelada}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="caminhoPagamentoReprocessar_02" name="Reprocessar" sourceRef="decisaoPagamento_04" targetRef="fidc-cessao-commons-tarefa-solicitarPagamentoComplementar" />
       <bpmn:sequenceFlow id="caminhoPagamentoInconsistente_06" sourceRef="fidc.liquidacao.analisar-inconsistencia-pagamento-complementar" targetRef="decisaoPagamento_04" />
       <bpmn:sequenceFlow id="caminhoPagamentoInconsistente_05" name="Inconsistente" sourceRef="decisaoPagamento_03" targetRef="fidc.liquidacao.analisar-inconsistencia-pagamento-complementar">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${S(resultado).prop("codigo").stringValue() == "INCONSISTENTE"}</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${validarBPM.status.inconsistente}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="caminhoPagamento_09" sourceRef="decisaoPagamento_03" targetRef="fidc-cessao-commons-tarefa-enviarComprovanteTransferencia-complementar" />
       <bpmn:sequenceFlow id="caminhoPagamento_08" sourceRef="fidc-cessao-commons-tarefa-verificarPagamentoComplementar" targetRef="decisaoPagamento_03" />
@@ -191,7 +194,7 @@ export function templateBaixaPrecatorio(config: configEsteira) {
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="caminho_16" sourceRef="fidc-cessao-commons-tarefa-recuperarLastroComplementar" targetRef="decisao_04" />
     <bpmn:sequenceFlow id="caminho_17" sourceRef="decisao_04" targetRef="fidc-cessao-commons-tarefa-notificarEmail-outro">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${S(resultado).prop("codigo").stringValue() == "PAGAMENTO"}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${validarBPM.status.pagamento}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="caminhoConcluida_01" name="Concluída" sourceRef="decisao_04" targetRef="fidc-cessao-commons-tarefa-atualizarCessao" />
     <bpmn:exclusiveGateway id="decisao_05" default="caminho_20">
@@ -202,7 +205,7 @@ export function templateBaixaPrecatorio(config: configEsteira) {
     <bpmn:sequenceFlow id="caminho_19" sourceRef="fidc.precatorio.pagamento-complementar" targetRef="decisao_05" />
     <bpmn:sequenceFlow id="caminho_20" sourceRef="decisao_05" targetRef="fidc-cessao-commons-tarefa-notificarClienteEmail-liquidacao" />
     <bpmn:sequenceFlow id="caminhoCancelada_02" name="Cancelada" sourceRef="decisao_05" targetRef="fidc-cessao-commons-tarefa-atualizarCessao">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${S(resultado).prop("codigo").stringValue() == "CANCELADA"}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${validarBPM.status.cancelada}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:serviceTask id="fidc-cessao-commons-tarefa-notificarClienteEmail-liquidacao" name="Notificar Cliente (Email)" camunda:type="external" camunda:topic="fidc-precatorio-cessao-tarefa-notificarClienteEmail">
       <bpmn:incoming>caminho_20</bpmn:incoming>
@@ -240,10 +243,10 @@ export function templateBaixaPrecatorio(config: configEsteira) {
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="caminho_24" sourceRef="fidc-cessao-commons-tarefa-notificarClienteArquivo" targetRef="fidc-precatorio-cessao-tarefa-notificarClienteEmail" />
     <bpmn:sequenceFlow id="caminhoNaoCapturada_01" name="Não Capturada" sourceRef="decisao_01" targetRef="fidc-cessao-commons-tarefa-notificarClienteArquivo">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${S(resultado).prop("codigo").stringValue() != "CAPTURADA"}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${validarBPM.status.naoCapturada}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="caminhoReprovada_01" name="Reprovada" sourceRef="decisao_02" targetRef="fidc-cessao-commons-tarefa-atualizarCessao">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${S(resultado).prop("codigo").stringValue() == "REPROVADA"}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${validarBPM.status.reprovada}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:serviceTask id="fidc-precatorio-cessao-tarefa-notificarClienteEmail-lastroRecuperado" name="Notificar Cliente (Email)" camunda:type="external" camunda:topic="fidc-precatorio-cessao-tarefa-notificarClienteEmail">
       <bpmn:incoming>caminho_05</bpmn:incoming>
@@ -253,7 +256,7 @@ export function templateBaixaPrecatorio(config: configEsteira) {
     <bpmn:serviceTask id="fidc-cessao-commons-tarefa-notificarEmail-outro" name="Notificar Email (Complemetar)" camunda:type="external" camunda:topic="fidc-cessao-commons-tarefa-notificarEmail">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="email">${notificacaoPagamentoComplementar}</camunda:inputParameter>
+          <camunda:inputParameter name="email">${parametrosBPM.notificacaoPagamentoComplementar}</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>caminho_17</bpmn:incoming>
@@ -309,16 +312,16 @@ export function templateBaixaPrecatorio(config: configEsteira) {
       <bpmn:sequenceFlow id="caminhoPagamento_01" sourceRef="fidc.cessao.pagamento-start" targetRef="fidc-cessao-commons-tarefa-solicitarPagamentos" />
       <bpmn:sequenceFlow id="caminhoPagamento_03" sourceRef="fidc-cessao-commons-tarefa-verificarPagamentos" targetRef="decisaoPagamento_01" />
       <bpmn:sequenceFlow id="caminhoPagamentoInconsistente_01" name="Inconsistente" sourceRef="decisaoPagamento_01" targetRef="fidc.liquidacao.analisar-inconsistencia-pagamento">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${S(resultado).prop("codigo").stringValue() == "INCONSISTENTE"}</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${validarBPM.status.inconsistente}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="caminhoPagamentoCancelada_01" name="Cancelada" sourceRef="decisaoPagamento_02" targetRef="fidc.cessao.pagamento-end">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${S(resultado).prop("codigo").stringValue() == "CANCELADA"}</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${validarBPM.status.cancelada}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="caminhoPagamento_02" sourceRef="fidc-cessao-commons-tarefa-solicitarPagamentos" targetRef="fidc-cessao-commons-tarefa-verificarPagamentos" />
       <bpmn:sequenceFlow id="caminhoPagamentoReprocessar_01" name="Reprocessar" sourceRef="decisaoPagamento_02" targetRef="fidc-cessao-commons-tarefa-solicitarPagamentos" />
       <bpmn:sequenceFlow id="caminhoPagamentoInconsistente_02" sourceRef="fidc.liquidacao.analisar-inconsistencia-pagamento" targetRef="decisaoPagamento_02" />
       <bpmn:sequenceFlow id="caminhoPagamentoInconsistente_03" name="Concluída" sourceRef="decisaoPagamento_02" targetRef="fidc-cessao-commons-tarefa-aprovarGestaoTed">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${S(resultado).prop("codigo").stringValue() == "CONCLUIDA"}</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${validarBPM.status.concuida}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="caminhoPagamento_04" sourceRef="decisaoPagamento_01" targetRef="fidc-cessao-commons-tarefa-enviarComprovanteTransferencia" />
       <bpmn:sequenceFlow id="caminhoPagamentoInconsistente_04" sourceRef="fidc-cessao-commons-tarefa-aprovarGestaoTed" targetRef="fidc.cessao.pagamento-end" />
@@ -328,7 +331,7 @@ export function templateBaixaPrecatorio(config: configEsteira) {
   </bpmn:process>
   <bpmn:message id="fidc-precatorio-msg-cessaoAprovada" name="fidc-precatorio-msg-cessaoAprovada" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="fidc.fuel.cessao-direito-creditorio">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="fidc.${fundo.var.acronimo}.cessao-direito-creditorio">
       <bpmndi:BPMNEdge id="Flow_1f665vg_di" bpmnElement="caminho_25">
         <di:waypoint x="4980" y="205" />
         <di:waypoint x="5010" y="205" />
@@ -493,7 +496,7 @@ export function templateBaixaPrecatorio(config: configEsteira) {
       <bpmndi:BPMNShape id="Event_1ndkix2_di" bpmnElement="fidc.cessao.de.direitos.creditorios-start">
         <dc:Bounds x="142" y="202" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0d0tfg5_di" bpmnElement="fidc.fuel.configuracao">
+      <bpmndi:BPMNShape id="Activity_0d0tfg5_di" bpmnElement="fidc.${fundo.var.acronimo}.configuracao">
         <dc:Bounds x="220" y="180" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0ia86b5_di" bpmnElement="fidc-precatorio-cessao-tarefa-recuperarFicha">

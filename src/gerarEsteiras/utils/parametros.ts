@@ -20,42 +20,74 @@ export interface configEsteira {
 
         var: {
             acronimo: string,
-            emails: string
             sftpOutput: string,
+            webhook: string,
+
+            email: {
+                notificarSituacao: string,
+                notificarPendenciaLastro: string,
+                notificarPagamentoComplementar: string
+            },
 
             schema: {
                 input: input,
                 output: output
             }
-            webhook: string
         }
     }
 }
 
 export const parametroBaixa = {
-    "schemas": {
-        "entrada": {
+
+    schemas: {
+        entrada: {
             'padrao': '',
             'precatorio': 'https://schemas.brltrust.com.br/json/fidc/v1.2/precatorios/cessao.schema.json'
         },
-        "saida": {
+        saida: {
             'padrao': '',
             'precatorio': 'https://schemas.brltrust.com.br/json/fidc/v1.2/precatorios/cessao-retorno.schema.json'
         }
     },
-    "varOriginal": "${S(arquivo)}",
+
+    varOriginal: "${S(arquivo)}",
+}
+
+export const parametroCessao = {
+
+    schemas: {
+        entrada: {
+            'padrao': '',
+            'precatorio': 'https://schemas.brltrust.com.br/json/fidc/v1.2/precatorios/cessao.schema.json'
+        },
+        saida: {
+            'padrao': '',
+            'precatorio': 'https://schemas.brltrust.com.br/json/fidc/v1.2/precatorios/cessao-retorno.schema.json'
+        }
+    },
+
+    situacaoFromtis: "${S('{\"PAGO_PELO_BANCO_COBRADOR\": \"PAGAMENTO\" }')}",
+
+    notificacaoPendenciaLastro: "${notificacaoPendenciaLastro}",
+
+    notificacaoPagamentoComplementar: "${notificacaoPagamentoComplementar}",
+
 }
 
 export const parametrosValidacao = {
     "status": {
-        "aprovado": "${S(cadastro).prop(\"resultado\").prop(\"codigo\").stringValue() == \"APROVADO\"}",
-        "analise": "${S(cadastro).prop(\"resultado\").prop(\"codigo\").stringValue() == \"ANALISE\"}",
+        "concuida": "${S(resultado).prop(\"codigo\").stringValue() == \"CONCLUIDA\"}",
+        "inconsistente": "${S(resultado).prop(\"codigo\").stringValue() == \"INCONSISTENTE\"}",
         "invalido": "${S(resultado).prop(\"codigo\").stringValue() != \"VALIDO\"}",
         "naoCapturada": "${S(resultado).prop(\"codigo\").stringValue() != \"CAPTURADA\"}",
         "reprovada": "${S(resultado).prop(\"codigo\").stringValue() == \"REPROVADA\"}",
         "cancelada": "${S(resultado).prop(\"codigo\").stringValue() == \"CANCELADA\"}",
+        "pagamento": "${S(resultado).prop(\"codigo\").stringValue() == \"PAGAMENTO\"}",
         "canceladaPagamento": "${S(resultado).prop(\"codigo\").stringValue() != \"PAGAMENTO\"}",
+        "duplicada": "${S(resultado).prop(\"codigo\").stringValue() == \"DUPLICADA\"}",
+
         "pendente": "${S(cadastro).prop(\"resultado\").prop(\"codigo\").stringValue() == \"PENDENTE\"}",
-        "duplicada": "${S(resultado).prop(\"codigo\").stringValue() == \"DUPLICADA\"}"
+        "aprovado": "${S(cadastro).prop(\"resultado\").prop(\"codigo\").stringValue() == \"APROVADO\"}",
+        "analise": "${S(cadastro).prop(\"resultado\").prop(\"codigo\").stringValue() == \"ANALISE\"}"
     }
 };
