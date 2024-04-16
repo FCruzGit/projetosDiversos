@@ -10,17 +10,22 @@ export const configuracaoEsteira: configEsteira = {
     },
     fundo: {
         tipo: "FIDC", // FIDC | FIM | FIP
-        nome: "gales",
-        identificacao: 43104412000184,
+        nome: "return_ix",
+        identificacao: 0,
+
         var: {
-            acronimo: "gales",
-            emails: "string",
-            sftpOutput: "string",
+            acronimo: "radix", // O acronimo tambem é usado no id do processo
+            webhook: "",
+            sftpOutput: "gales/liquidacao/outbox", // .../.../outbox
+            emails: "brlflow@mg.brltrust.com.br, cessao_fidc@apexgroup.com, gabriel.storalli@radixportfolio.com.br", // Uma string de emails
 
             schema: {
                 input: 'baixaPrecatorio',
                 output: 'baixaPrecatorioRetorno'
-            }
+            },
+
+
+
         }
     }
 }
