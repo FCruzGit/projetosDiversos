@@ -8,12 +8,14 @@ export function templateBaixaPrecatorio(config: configEsteira) {
 
     const idFormatada = fundo.identificacao.toString().replace(/\D/g, '').padStart(14, '0')
 
+    const nomeBPM = `${fundo.tipo} ${(fundo.nome.replace(/[^a-zA-Z]/g, ' ')).toUpperCase()}`;
+
     const varsCNAB = `$\{S('{"fundo": {"identificacao": ${idFormatada}, "nome": "${fundo.tipo} ${fundo.nome.toUpperCase()}"}}')}`
 
     return `
     <?xml version="1.0" encoding="UTF-8"?>
     <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_15ak26e" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.9.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
-      <bpmn:process id="fidc.${fundo.var.acronimo}.liquidacao-recebiveis" name="[ ${fundo.tipo} ${(fundo.nome.replace(/[^a-zA-Z]/g, ' ')).toUpperCase()} ] Liquidação de Recebíveis" isExecutable="true" camunda:versionTag="1.0.1">
+      <bpmn:process id="fidc.${fundo.var.acronimo}.liquidacao-recebiveis" name="[ ${nomeBPM} ] Liquidação de Recebíveis" isExecutable="true" camunda:versionTag="1.0.1">
         <bpmn:startEvent id="startEvent">
           <bpmn:outgoing>caminho_01</bpmn:outgoing>
         </bpmn:startEvent>
@@ -51,7 +53,7 @@ export function templateBaixaPrecatorio(config: configEsteira) {
             <camunda:inputOutput>
               <camunda:outputParameter name="acronimo">${fundo.var.acronimo}</camunda:outputParameter>
               <camunda:outputParameter name="identificacaoFundo">${idFormatada}</camunda:outputParameter>
-              <camunda:outputParameter name="emails">${fundo.var.email.notificarSituacao}</camunda:outputParameter>
+              <camunda:outputParameter name="emails">${fundo.var.email.tarefaPadrao}</camunda:outputParameter>
               <camunda:outputParameter name="original">${parametrosBPM.varOriginal}</camunda:outputParameter>
               <camunda:outputParameter name="saida">${fundo.var.sftpOutput}</camunda:outputParameter>
               <camunda:outputParameter name="schema">${parametrosBPM.schemas.entrada.precatorio}</camunda:outputParameter>

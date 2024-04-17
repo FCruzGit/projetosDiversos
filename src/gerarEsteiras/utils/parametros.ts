@@ -1,6 +1,7 @@
 // Parametros Gerais
 
 export type fundoTipo = 'FIDC' | 'FIM' | 'FIP'| '' ;
+
 export type tipoOperacao = 'CESSÃO' | 'LIQUIDAÇÃO' | 'CADASTRO' | '' ;
 
 export type input = 'baixaPrecatorio' | 'baixaPadrao' | 'cessaoPrecatorio' | 'cessaoPadrao' | 'cadastroPrecatorio' | 'cadastroPadrao' | '' ;
@@ -24,7 +25,7 @@ export interface configEsteira {
             webhook: string,
 
             email: {
-                notificarSituacao: string,
+                tarefaPadrao: string,
                 notificarPendenciaLastro: string,
                 notificarPagamentoComplementar: string
             },
@@ -66,12 +67,30 @@ export const parametroCessao = {
         }
     },
 
+    taskDefinitionKey: "fidc.precatorio.apreciar-operacao",
+
     situacaoFromtis: "${S('{\"PAGO_PELO_BANCO_COBRADOR\": \"PAGAMENTO\" }')}",
 
     notificacaoPendenciaLastro: "${notificacaoPendenciaLastro}",
 
     notificacaoPagamentoComplementar: "${notificacaoPagamentoComplementar}",
 
+}
+
+export const parametroCadastro = {
+
+    schemas: {
+        entrada: {
+            'padrao': '',
+            'precatorio': 'https://schemas.brltrust.com.br/json/cadun/v1.2/pessoa.schema.json#/definitions/pessoa'
+        },
+        saida: {
+            'padrao': '',
+            'precatorio': 'https://schemas.brltrust.com.br/json/fidc/v1.2/precatorios/cedente-retorno.schema.json'
+        }
+    },
+    variavelLoopCadastro: "${S(cadastros).elements()}",
+    varPapel: "CEDENTE"
 }
 
 export const parametrosValidacao = {
@@ -84,10 +103,10 @@ export const parametrosValidacao = {
         "cancelada": "${S(resultado).prop(\"codigo\").stringValue() == \"CANCELADA\"}",
         "pagamento": "${S(resultado).prop(\"codigo\").stringValue() == \"PAGAMENTO\"}",
         "canceladaPagamento": "${S(resultado).prop(\"codigo\").stringValue() != \"PAGAMENTO\"}",
-        "duplicada": "${S(resultado).prop(\"codigo\").stringValue() == \"DUPLICADA\"}",
 
-        "pendente": "${S(cadastro).prop(\"resultado\").prop(\"codigo\").stringValue() == \"PENDENTE\"}",
+        "duplicada": "${S(cadastro).prop(\"resultado\").prop(\"codigo\").stringValue() == \"DUPLICADA\"}",
         "aprovado": "${S(cadastro).prop(\"resultado\").prop(\"codigo\").stringValue() == \"APROVADO\"}",
+        "pendente": "${S(cadastro).prop(\"resultado\").prop(\"codigo\").stringValue() == \"PENDENTE\"}",
         "analise": "${S(cadastro).prop(\"resultado\").prop(\"codigo\").stringValue() == \"ANALISE\"}"
     }
 };

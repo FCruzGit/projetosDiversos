@@ -1,5 +1,4 @@
 import {configEsteira, parametroCessao, parametrosValidacao} from '../utils/parametros';
-import {configuracaoEsteira} from "../utils/configuracao";
 
 export function templateCessaoPrecatorio(config: configEsteira) {
 
@@ -7,16 +6,18 @@ export function templateCessaoPrecatorio(config: configEsteira) {
     const parametrosBPM = parametroCessao
     const validarBPM = parametrosValidacao
 
-    const idFormatada = fundo.identificacao.toString().replace(/\D/g, '').padStart(14, '0')
+    const idFormatada = fundo.identificacao.toString().replace(/\D/g, '').padStart(14, '0');
 
-    const pendenciaLastro = `$\{S('{"to":"${fundo.var.email.notificarPendenciaLastro}","subject":"[ BRL TRUST ] Operação do ###fundo.acronimo### | ###identificadorCessao### Pendência de Lastro","html":"&lt;p&gt;Prezados,&lt;/p&gt; &lt;p&gt;Informamos que a operação &lt;b&gt;###identificadorCessao###&lt;/b&gt; do fundo &lt;b&gt;###fundo.acronimo###&lt;/b&gt; - &lt;b&gt;###fundo.nome###&lt;/b&gt; está aguardando o envio do lastro.&lt;/p&gt;&lt;p&gt;Atenciosamente&lt;/p&gt;"}')}`
+    const nomeBPM = `${fundo.tipo} ${(fundo.nome.replace(/[^a-zA-Z]/g, ' ')).toUpperCase()}`;
 
-    const PagamentoComplementar = `$\{S('{"to":"${fundo.var.email.notificarPagamentoComplementar}","subject":"[ BRL TRUST ] Operação do ###fundo.acronimo### | ###identificadorCessao### Pendência de Lastro","html":"&lt;p&gt;Prezados,&lt;/p&gt; &lt;p&gt;Informamos que a operação &lt;b&gt;###identificadorCessao###&lt;/b&gt; do fundo &lt;b&gt;###fundo.acronimo###&lt;/b&gt; - &lt;b&gt;###fundo.nome###&lt;/b&gt; foi atualizada e está agora em fase de pagamento complementar.&lt;/p&gt;&lt;p&gt;Atenciosamente&lt;/p&gt;"}')}`
+    const pendenciaLastro = `$\{S('{"to":"${fundo.var.email.notificarPendenciaLastro}","subject":"[ BRL TRUST ] Operação do ###fundo.acronimo### | ###identificadorCessao### Pendência de Lastro","html":"&lt;p&gt;Prezados,&lt;/p&gt; &lt;p&gt;Informamos que a operação &lt;b&gt;###identificadorCessao###&lt;/b&gt; do fundo &lt;b&gt;###fundo.acronimo###&lt;/b&gt; - &lt;b&gt;###fundo.nome###&lt;/b&gt; está aguardando o envio do lastro.&lt;/p&gt;&lt;p&gt;Atenciosamente&lt;/p&gt;"}')}`;
+
+    const PagamentoComplementar = `$\{S('{"to":"${fundo.var.email.notificarPagamentoComplementar}","subject":"[ BRL TRUST ] Operação do ###fundo.acronimo### | ###identificadorCessao### Pendência de Lastro","html":"&lt;p&gt;Prezados,&lt;/p&gt; &lt;p&gt;Informamos que a operação &lt;b&gt;###identificadorCessao###&lt;/b&gt; do fundo &lt;b&gt;###fundo.acronimo###&lt;/b&gt; - &lt;b&gt;###fundo.nome###&lt;/b&gt; foi atualizada e está agora em fase de pagamento complementar.&lt;/p&gt;&lt;p&gt;Atenciosamente&lt;/p&gt;"}')}`;
 
     return `
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_0admcx5" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.9.0">
-  <bpmn:process id="fidc.${fundo.var.acronimo}.cessao-direito-creditorio" name="[ ${fundo.tipo} ${(fundo.nome.replace(/[^a-zA-Z]/g, ' ')).toUpperCase()} ] Cessão de Direitos Creditórios" isExecutable="true" camunda:versionTag="1.0.1">
+  <bpmn:process id="fidc.${fundo.var.acronimo}.cessao-direito-creditorio" name="[ ${nomeBPM} ] Cessão de Direitos Creditórios" isExecutable="true" camunda:versionTag="1.0.1">
     <bpmn:startEvent id="fidc.cessao.de.direitos.creditorios-start">
       <bpmn:outgoing>caminho_01</bpmn:outgoing>
     </bpmn:startEvent>
@@ -92,12 +93,12 @@ export function templateCessaoPrecatorio(config: configEsteira) {
         <camunda:inputOutput>
           <camunda:outputParameter name="acronimo">${fundo.var.acronimo}</camunda:outputParameter>
           <camunda:outputParameter name="identificacaoFundo">${idFormatada}</camunda:outputParameter>
-          <camunda:outputParameter name="emails">${fundo.var.email.notificarSituacao}</camunda:outputParameter>
+          <camunda:outputParameter name="emails">${fundo.var.email.tarefaPadrao}</camunda:outputParameter>
           <camunda:outputParameter name="saida">${fundo.var.sftpOutput}</camunda:outputParameter>
           <camunda:outputParameter name="schema">${parametrosBPM.schemas.entrada.precatorio}</camunda:outputParameter>
           <camunda:outputParameter name="schemaRetorno">${parametrosBPM.schemas.saida.precatorio}</camunda:outputParameter>
           <camunda:outputParameter name="situacaoFromtis">${parametrosBPM.situacaoFromtis}</camunda:outputParameter>
-          <camunda:outputParameter name="taskDefinitionKey">fidc.precatorio.apreciar-operacao</camunda:outputParameter>
+          <camunda:outputParameter name="taskDefinitionKey">${parametrosBPM.taskDefinitionKey}</camunda:outputParameter>
           <camunda:outputParameter name="webhook">${fundo.var.webhook}</camunda:outputParameter>
           <camunda:outputParameter name="notificacaoPendenciaLastro">${pendenciaLastro}</camunda:outputParameter>
           <camunda:outputParameter name="notificacaoPagamentoComplementar">${PagamentoComplementar}</camunda:outputParameter>

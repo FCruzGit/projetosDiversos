@@ -8,6 +8,7 @@ export async function verificarDiretorioBPM(diretoriosAnalisar: configEsteira) {
 
     if (!fs.existsSync(diretorio)) {
         await fs.promises.mkdir(diretorio, { recursive: true });
-        console.log("Diretorio de Saida Criado\n")
+
+        console.log("Diretorio de Saida Criado")
     }
 }

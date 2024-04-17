@@ -16,9 +16,9 @@ export async function gerarArquivoBPM(xml: string, configuracoesEsteira: configE
                 return operacoes[tipoOperacao] || 'Tipo de operação não reconhecido';
         }
 
-        const nomeArquivoFinal = `[ ${configuracoesEsteira.fundo.tipo} ${configuracoesEsteira.fundo.nome.toUpperCase()} ] ${validarTipoOperacao()}`
+        const nomeArquivoFinal = `[ ${configuracoesEsteira.fundo.tipo} ${configuracoesEsteira.fundo.nome.replace(/[^a-zA-Z]/g, ' ').toUpperCase()} ] ${validarTipoOperacao()}`
 
         fs.writeFileSync(path.join(__dirname, configuracoesEsteira.diretorioSaida, `${nomeArquivoFinal}.bpmn`), xml);
 
-        console.log("\n" + "Arquivo BPM " + nomeArquivoFinal + ".bpmn" + " gerado com sucesso!" + "\n\n" + "Arquivo path:" + " " + __dirname + configuracoesEsteira.diretorioSaida);
+        console.log("\n\n" + "Arquivo BPM " + nomeArquivoFinal + ".bpmn" + " gerado com sucesso!" + "\n\n" + "Arquivo path:" + " " + __dirname + configuracoesEsteira.diretorioSaida);
 }

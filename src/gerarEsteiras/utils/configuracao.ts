@@ -10,18 +10,18 @@ export const configuracaoEsteira: configEsteira = {
     },
     fundo: {
         tipo: "FIDC", // FIDC | FIM | FIP
-        nome: "return_ix",
+        nome: "gales",
         identificacao: 0,
 
         var: {
-            acronimo: "return_ix", // IMPORTANTE! O acronimo tambem é usado no id do processo
-            webhook: "return_ix/webhook",
-            sftpOutput: "return_ix/liquidacao/outbox",
+            acronimo: "radix", // esse campo tambem serve para o Id do Bpm
+            webhook: "webhook/radix",
+            sftpOutput: "gales/cessao/outbox",
 
             email: {
-                notificarSituacao: "brlflow@mg.brltrust.com.br, cessao_fidc@apexgroup.com, return_ix@return_ix.com.br",
-                notificarPendenciaLastro: "cessao_fidc@brltrust.com.br, ti.developers@apexgroup.com",
-                notificarPagamentoComplementar: "cessao_fidc@brltrust.com.br, processamento.fidc@apexgroup.com, frank.moreira@apexgroup.com, paulo.moraes@apexgroup.com, levi.avelar@apexgroup.com, ti.developers@apexgroup.com",
+                tarefaPadrao: "brlflow@mg.brltrust.com.br, cessao_fidc@apexgroup.com, gabriel.storalli@radixportfolio.com.br",
+                notificarPendenciaLastro: "cessao_fidc@brltrust.com.br, ti.developers@apexgroup.com", // Cessão
+                notificarPagamentoComplementar: "cessao_fidc@brltrust.com.br, processamento.fidc@apexgroup.com, frank.moreira@apexgroup.com, paulo.moraes@apexgroup.com, levi.avelar@apexgroup.com, ti.developers@apexgroup.com", // Cessão
             },
 
             schema: {
