@@ -5,14 +5,15 @@ import {templateCessaoPrecatorio} from "../template/templateCessaoPrecatorio";
 import {templateCadastroPrecatorio} from '../template/templateCadastroPrecatorio';
 
 export function selecionarTemplate(config: configEsteira): any {
-    const tipoEsteira = config.fundo.var.schema.input
-    const selecionarTemplate: any = {
 
-        baixaPadrao: '',
+    const tipoEsteira = config.fundo.var.schema.input
+
+    const selecionarTemplate: any = {
+        baixaPadrao: 'templateBaixa(configuracaoEsteira)',
         baixaPrecatorio: templateBaixaPrecatorio(configuracaoEsteira),
-        cessaoPadrao: '',
+        cessaoPadrao: 'templateCessao(configuracaoEsteira)',
         cessaoPrecatorio: templateCessaoPrecatorio(configuracaoEsteira),
-        cadastroPadrao: '',
+        cadastroPadrao: 'templateCadastro(configuracaoEsteira)',
         cadastroPrecatorio: templateCadastroPrecatorio(configuracaoEsteira)
     };
 
