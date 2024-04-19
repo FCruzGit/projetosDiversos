@@ -1,75 +1,37 @@
 // Informações para geração do QR Code
-import {QRCodeRenderersOptions} from 'qrcode';
-import {PngConfig} from 'canvas';
 
-export interface definicoesProjeto {
+export const configuracoes = {
 
-    diretoriosProjeto: diretoriosProjeto
-
-    conversaoB64: boolean,
-
-    gerarGIF: boolean
-}
-
-export interface diretoriosProjeto {
-
-    saidaArquivoB64: string,
-
-    saidaArquivoTemp: string,
-
-    saidaArquivoFinal: string,
-}
-
-export interface instrucoesPadrao extends QRCodeRenderersOptions {
-
-    instrucoesQRCode: {
-
-        url: string,
-
-        PngConfig: PngConfig
-    }
-}
-
-export const configuracoesQRCode: instrucoesPadrao = {
-
-    margin: 0.5, // Tamanho da margem ao redor do QR Code
-
-    width: 250, // Tamanho em Pixels da Imagem
-
-    errorCorrectionLevel: 'H', // Nivel de tenacidade do QrCode
-
-    maskPattern: 7, // Altera a formatação dos pixels
-
-    color: {
-
-        light: "#00000000", // Cor de Fundo
-
-        dark: "#000000" // Cor dos dados
-    },
-
-    instrucoesQRCode: {
+    QRC: {
 
         url: "www.google.com", // Endereço do QR Code
 
-        PngConfig: {
+        compressionLevel: 0, // Compressão da Imagem
 
-            compressionLevel: 0, // Compressão da Imagem
-        }
-    }
-}
+        margin: 0.5, // Tamanho da margem ao redor do QR Code
 
-export const definicoesProjeto: definicoesProjeto = {
+        width: 250, // Tamanho em Pixels da Imagem
 
-    diretoriosProjeto: {
+        errorCorrectionLevel: 'H', // Nivel de tenacidade do QrCode
 
-        saidaArquivoTemp: '../../../src/GeradorDeQr/SaidaArquivo/temporario',
+        maskPattern: 7, // Altera a formatação dos pixels
 
-        saidaArquivoFinal:'../../../src/GeradorDeQr/SaidaArquivo/arquivosConcluidos',
+        color:  {
 
-        saidaArquivoB64: "../../../src/GeradorDeQr/SaidaArquivo/arquivosB64"
+            light: "#00000000", // Cor de Fundo
+
+            dark: "#000000" // Cor dos dados
+        },
     },
 
-    conversaoB64: true,
-
-    gerarGIF: false
+    projeto: {
+        opcoes: {
+            gerarQRC: {
+                quantidade: "number",
+                estilo: "campo vai entregar varios tipos de coloração inclusive random e gif"
+            },
+            converterQRCtoBase64: "boolean"
+        },
+        diretorioArquivos: ""
+    }
 }
