@@ -4,29 +4,29 @@ import {configEsteira} from './parametros';
 
 export const configuracaoEsteira: configEsteira = {
 
-    diretorioSaida: "../../../src/gerarEsteiras/SaidaArquivoBPM",
+    diretorioSaida: "../../../src/GerarArquivoBPM/SaidaArquivoBPM",
     operacao: {
-        tipo: "CESSÃO" // CESSÃO | LIQUIDAÇÃO | CADASTRO
+        tipo: "" // CESSÃO | LIQUIDAÇÃO | CADASTRO
     },
     fundo: {
-        tipo: "FIDC", // FIDC | FIM | FIP
-        nome: "gales",
+        tipo: "", // FIDC | FIM | FIP
+        nome: "",
         identificacao: 0,
 
         var: {
-            acronimo: "radix", // esse campo tambem serve para o Id do Bpm
-            webhook: "webhook/radix",
-            sftpOutput: "gales/cessao/outbox",
+            acronimo: "", // esse campo tambem serve para o Id do Bpm
+            webhook: "",
+            sftpOutput: "",
 
             email: {
-                tarefaPadrao: "brlflow@mg.brltrust.com.br, cessao_fidc@apexgroup.com, gabriel.storalli@radixportfolio.com.br",
-                notificarPendenciaLastro: "cessao_fidc@brltrust.com.br, ti.developers@apexgroup.com", // Cessão
-                notificarPagamentoComplementar: "cessao_fidc@brltrust.com.br, processamento.fidc@apexgroup.com, frank.moreira@apexgroup.com, paulo.moraes@apexgroup.com, levi.avelar@apexgroup.com, ti.developers@apexgroup.com", // Cessão
+                tarefaPadrao: "",
+                notificarPendenciaLastro: "", // Preencher se necessario apenas Cessões
+                notificarPagamentoComplementar: "", // Preencher se necessario apenas Cessões
             },
 
             schema: {
-                input: 'cessaoPrecatorio',
-                output: 'cessaoPrecatorioRetorno'
+                input: "",
+                output: ""
             },
         }
     }
